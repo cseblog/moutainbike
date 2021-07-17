@@ -36,51 +36,42 @@ public class Graph {
         }
     }
 
-    public List<Node> getLongestPath() {
-        List<List<Node>> chains = new ArrayList<>();
+    public Path getLongestPath() {
+        List<Path> chains = new ArrayList<>();
 
         this.nodes.stream().forEach(n -> {
-            List<Node> friendLongestChain = this.getLongestPathByNode(n);
+            Path friendLongestChain = this.getLongestPathByNode(n);
 //            log.info("Longest path from {}, {}", n.getV(), friendLongestChain);
             chains.add(friendLongestChain);
         });
 
-        List<Node> maxChain = new ArrayList<>();
-        for (int i = 0; i < chains.size(); i++) {
-            List<Node> chain = chains.get(i);
-            if(chain.size() > maxChain.size()){
-                maxChain = chain;
-            }
+        Path maxChain = new Path();
 
-            if(chain.size() == maxChain.size()) {
-                int delta = chain.get(0).getV() - chain.get(chain.size() - 1).getV();
-                int currDelta = maxChain.get(0).getV() - maxChain.get(chain.size() - 1).getV();
-                if(delta > currDelta){
-                    maxChain = chain;
-                }
+        for (int i = 0; i < chains.size(); i++) {
+            Path chain = chains.get(i);
+            if (chain.compare(maxChain) ) {
+                maxChain = chain;
             }
         }
         return maxChain;
     }
 
 
-    public List<Node> getLongestPathByNode(Node n){
-        List<Node> list = new ArrayList<>();
-        list.add(n);
+    public Path getLongestPathByNode(Node n) {
+        Path path = new Path();
+        path.add(n);
         List<Node> friends = n.getFriends();
-        int max = 0;
-        List<Node> maxPath = null;
+        Path maxPath = null;
         for (int i = 0; i < friends.size(); i++) {
-            List<Node> tmpList = getLongestPathByNode(friends.get(i));
-            if(tmpList.size() > max){
-                maxPath = tmpList;
-                max = tmpList.size();
+            Path currentPath = getLongestPathByNode(friends.get(i));
+            if (currentPath.compare(maxPath)) {
+                maxPath = currentPath;
             }
         }
-        if(maxPath != null){
-            list.addAll(maxPath);
+        if (maxPath != null) {
+            path.addAll(maxPath);
         }
-        return list;
+        return path;
     }
 
 
@@ -89,7 +80,7 @@ public class Graph {
             List<Node> friends = n.getFriends();
             List<Integer> friendList = new ArrayList<>();
             friends.forEach(f -> friendList.add(f.getV()));
-            log.info("{}-> {}",n.getV(), friendList);
+            log.info("{}-> {}", n.getV(), friendList);
         });
     }
 }

@@ -21,18 +21,17 @@ public class GraphTest {
     public void test1() {
         graph.build(4,"4 8 7 3 2 5 9 3 6 3 2 5 4 4 1 6");
 //        graph.print();
-        List<Node> maxChain = graph.getLongestPath();
-        log.info("Final longest path: {}", maxChain);
+        Path maxChain = graph.getLongestPath();
+        log.info("Final longest path: {}", maxChain.getNodeList());
     }
 
     @Test
     public void test2() throws IOException {
-        String data = new String(getClass().getClassLoader().getResourceAsStream("test2.txt").readAllBytes());
+        String data = new String(getClass()
+                .getClassLoader().getResourceAsStream("test2.txt").readAllBytes());
         data = data.replaceAll("\n", " ");
-
         graph.build(1000,data);
-//        graph.print();
-        List<Node> maxChain = graph.getLongestPath();
-        log.info("Final longest path: {}", maxChain);
+        Path maxChain = graph.getLongestPath();
+        log.info("Final longest path: {}", maxChain.getNodeList());
     }
 }

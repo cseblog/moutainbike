@@ -3,6 +3,7 @@ package com.jajudev.mountainbike.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -10,7 +11,30 @@ import java.util.List;
 public class Path {
     List<Node> nodeList;
 
+    public Path(){
+        nodeList = new ArrayList<>();
+    }
+
+    public void add(Node node){
+        nodeList.add(node);
+    }
+
+    public void addAll(Path path){
+        this.nodeList.addAll(path.getNodeList());
+    }
+
+    public int getSize(){
+        if(nodeList.isEmpty() || nodeList == null){
+            return 0;
+        }
+        return nodeList.size();
+    }
+
     public boolean compare(Path p) {
+        if(p == null){
+            return true;
+        }
+
         List<Node> l = p.getNodeList();
         if (nodeList.size() > l.size()) {
             return true;
