@@ -29,8 +29,15 @@ public class GraphTest {
     public void test2() throws IOException {
         String data = new String(getClass()
                 .getClassLoader().getResourceAsStream("test2.txt").readAllBytes());
-        data = data.replaceAll("\n", " ");
-        graph.build(1000,data);
+        String[] dataArr = data.split("\n");
+
+        int size = Integer.parseInt(dataArr[0].split(" ")[0]);
+        String matrix = "";
+        for (int i = 1; i < dataArr.length; i++) {
+            matrix = String.format("%s %s", matrix, dataArr[i]);
+        }
+
+        graph.build(size,matrix.trim());
         Path maxChain = graph.getLongestPath();
         log.info("Final longest path: {}", maxChain.getNodeList());
     }
