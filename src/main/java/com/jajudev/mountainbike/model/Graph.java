@@ -13,6 +13,12 @@ public class Graph {
     int size;
     List<Node> nodes = new ArrayList<>();
 
+    /**
+     * Build graph from a string of matrix
+     * Ex: "4 8 7 3 2 5 9 3 6 3 2 5 4 4 1 6"
+     * @param n
+     * @param matrixStr
+     */
     public void build(int n, String matrixStr) {
         String[] strArr = matrixStr.split(" ");
         int[] intArr = Stream.of(strArr).mapToInt(Integer::parseInt).toArray();
@@ -36,24 +42,30 @@ public class Graph {
         }
     }
 
-    public Path getLongestPath() {
-        List<Path> chains = new ArrayList<>();
+    public void print() {
+        nodes.forEach(n -> {
+            List<Node> friends = n.getFriends();
+            List<Integer> friendList = new ArrayList<>();
+            friends.forEach(f -> friendList.add(f.getV()));
+            log.info("{}-> {}", n.getV(), friendList);
+        });
+    }
 
+    public Path getLongestPath() {
+        List<Path> paths = new ArrayList<>();
         this.nodes.stream().forEach(n -> {
-            Path friendLongestChain = this.getLongestPathByNode(n);
-//            log.info("Longest path from {}, {}", n.getV(), friendLongestChain);
-            chains.add(friendLongestChain);
+            Path friendLongestPath = this.getLongestPathByNode(n);
+            paths.add(friendLongestPath);
         });
 
-        Path maxChain = new Path();
-
-        for (int i = 0; i < chains.size(); i++) {
-            Path chain = chains.get(i);
-            if (chain.compare(maxChain) ) {
-                maxChain = chain;
+        Path longestPath = new Path();
+        for (int i = 0; i < paths.size(); i++) {
+            Path currPath = paths.get(i);
+            if (currPath.compare(longestPath) ) {
+                longestPath = currPath;
             }
         }
-        return maxChain;
+        return longestPath;
     }
 
 
@@ -68,19 +80,11 @@ public class Graph {
                 maxPath = currentPath;
             }
         }
+
         if (maxPath != null) {
             path.addAll(maxPath);
         }
         return path;
     }
 
-
-    public void print() {
-        nodes.forEach(n -> {
-            List<Node> friends = n.getFriends();
-            List<Integer> friendList = new ArrayList<>();
-            friends.forEach(f -> friendList.add(f.getV()));
-            log.info("{}-> {}", n.getV(), friendList);
-        });
-    }
 }
